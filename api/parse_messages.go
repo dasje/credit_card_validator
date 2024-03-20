@@ -10,6 +10,59 @@ import (
 
 type IncomingCardNumber struct {
 	CardNumber *string `json:"cardNumber"`
+	CVVNumber *string `json:"cvvNumber"`
+}
+
+func ParseIncomingCVVNumberReturnSlice(
+	w *http.ResponseWriter,
+	r *http.Request,
+	url string,
+	method string,
+) *[]int {
+	var cvvInts []int
+
+	if r.URL.Path != url {
+		http.Error(*w, "404 Not found.", http.StatusNotFound)
+		return &cvvInts
+	}
+
+	if r.Method != method {
+		http.Error(*w, "Method is not supported.", http.StatusNotFound)
+		return &cvvInts
+	}
+
+	body, bodyReadError := io.ReadAll(r.Body)
+	if bodyReadError != nil {
+		http.Error(*w, "Body not parsable.", http.StatusBadRequest)
+		return &cvvInts
+	}
+
+	// Extract card number from incoming JSON
+	var newBody IncomingCardNumber
+	var cvvNumber string
+	jsonReadError := json.Unmarshal(body, &newBody)
+	if jsonReadError != nil {
+		http.Error(*w, "Body is not valid JSON.", http.StatusBadRequest)
+		return &cvvInts
+		} else if newBody.CVVNumber == nil {
+		// If card number not present, exit function.
+		http.Error(*w, "JSON not parsable.", http.StatusBadRequest)
+		return &cvvInts
+	}
+	cvvNumber = *newBody.CVVNumber
+	
+	// Convert card number string to slice.
+	cardStringInts := strings.SplitAfter(cvvNumber, "")
+	for _, v := range cardStringInts {
+		newV, conversionError := strconv.Atoi(v)
+		if conversionError != nil {
+			http.Error(*w, "Card number not readable.", http.StatusBadRequest)
+			return &cvvInts
+			} else {
+			cvvInts = append(cvvInts, newV)
+		}
+	}
+	return &cvvInts
 }
 
 func ParseIncomingCardNumberReturnSlice(

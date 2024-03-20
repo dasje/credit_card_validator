@@ -57,8 +57,9 @@ func main() {
 	fileServer := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fileServer)
 	http.HandleFunc("/validate_card", handleWithResources(issuerResources, server.CardValidation))
-	http.HandleFunc("/industry_validation", handleWithResources(industryResources, server.MajorIndustryValidation))
+	http.HandleFunc("/industry_validation", handleWithResources(industryResources, server.IdentifyMajorIndustry))
 	http.HandleFunc("/check_card_accepted", handleWithResources(cardRegex, server.CardAccepted))
+	http.HandleFunc("/check_cvv_valid", server.CVVValidation)
 
 	fmt.Printf("Starting server at port 8080\n")
 	if err := http.ListenAndServe(":8080", nil); err != nil {

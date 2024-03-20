@@ -4,6 +4,14 @@ import (
 	"regexp"
 )
 
+func CVVIsValid(cvvNumber []int) bool {
+	if len(cvvNumber) == 3 {
+		return true
+	} else {
+		return false
+	}
+}
+
 // Identify card issuers based on cardRegexes resource.
 func CheckCardIssuer(cardNumberString string, cardRegexes interface{}) []string {
 	// Force type of incoming interface

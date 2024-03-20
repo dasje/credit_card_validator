@@ -7,6 +7,22 @@ import (
 	"net/http"
 )
 
+func CVVValidation(w http.ResponseWriter, r *http.Request) {
+	cvvInts := ParseIncomingCVVNumberReturnSlice(&w, r, "/check_cvv_valid", "GET")
+	if len(*cvvInts) == 0 {
+		return
+	} else {
+		retVal := validation_algorithms.CVVIsValid(*cvvInts)
+	
+		returnData := map[string]interface{} {
+			"cvvValid": retVal,
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(returnData)
+	}
+}
+
 func CardValidation(w http.ResponseWriter, r *http.Request, issuerMap interface{}) {
 	cardInts := ParseIncomingCardNumberReturnSlice(&w, r, "/validate_card", "GET")
 	if len(*cardInts) == 0 {

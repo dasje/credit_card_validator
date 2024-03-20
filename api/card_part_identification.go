@@ -7,7 +7,7 @@ import (
 )
 
 
-func MajorIndustryValidation(w http.ResponseWriter, r *http.Request, industryResources interface{}) {
+func IdentifyMajorIndustry(w http.ResponseWriter, r *http.Request, industryResources interface{}) {
 	cardInts := ParseIncomingCardNumberReturnSlice(&w, r, "/industry_validation", "GET")
 	if len(*cardInts) == 0 {
 		return
