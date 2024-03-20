@@ -1,0 +1,9 @@
+version: '3'
+services:
+  credit_card_validation_server:
+    restart: always
+    build: 
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - 8080:8080

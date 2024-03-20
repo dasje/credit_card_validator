@@ -3,18 +3,15 @@ package server
 import (
 	"credit_card_validation/validation_algorithms"
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
-func LuhnValidation(w http.ResponseWriter, r *http.Request) {
+func LuhnValidation(w http.ResponseWriter, r *http.Request, issuerMap interface{}) {
 	cardInts := ParseIncomingCardNumber(&w, r, "/luhn_validation", "GET")
-	fmt.Println(cardInts)
 	if len(*cardInts) == 0 {
 		return
 	} else {
 		retVal := validation_algorithms.LuhnIsValid(cardInts)
-		fmt.Println(retVal)
 	
 		returnData := map[string]interface{} {
 			"cardValid": retVal,

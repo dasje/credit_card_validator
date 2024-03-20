@@ -1,0 +1,197 @@
+{
+    "American Express": {
+        "numbers":
+            [
+                34, 37
+            ],
+        "length": 15,
+        "validation": "luhn"
+    },
+    "China T-Union": {
+        "numbers":
+            [31],
+        "length": 19,
+        "validation": "luhn"
+    },
+    "China UnionPay": {
+        "numbers":
+            [62],
+        "length": 19,
+        "validation": "luhn"
+    },
+    "Diners Club enRoute": {
+        "numbers":
+            [],
+        "length": 15,
+        "validation": "none"
+    },
+    "Diners Club International": {
+        "numbers":
+            [36],
+        "length": 19,
+        "validation": "luhn"
+    },
+    "Diners Club United States & Canada": {
+        "numbers":
+            [55],
+        "length": 16,
+        "validation": "luhn"
+    },
+    "Discover Card": {
+        "numbers":
+            [
+                6011, [644,649], 65, [622126,622925]
+            ],
+        "length": 19,
+        "validation": "luhn"
+    },
+    "UkrCard": {
+        "numbers":
+            [
+                60400100, 60420099
+            ],
+        "length": 19,
+        "validation": "luhn"
+    },
+    "RuPay": {
+        "numbers":
+            [
+                60, 65, 81, 82, 508, 353, 356 
+            ],
+        "length": 16,
+        "validation": "luhn"
+    },
+    "InterPayment": {
+        "numbers":
+            [636],
+        "length": 19,
+        "validation": "luhn"
+    },
+    "InstaPayment": {
+        "numbers":
+            [[637,639]],
+        "length": 16,
+        "validation": "luhn"
+    },
+    "JCB": {
+        "numbers":
+            [[3528, 3589]],
+        "length": 15,
+        "validation": "luhn"
+    },
+    "Maestro UK": {
+        "numbers":
+            [
+                6759, 676770, 676774
+            ],
+        "length": 19,
+        "validation": "luhn"
+    },
+    "Maestro": {
+        "numbers":
+            [
+                5018, 5020, 5038, 5893, 6304, 6759, 6761, 6762, 6763
+            ],
+        "length": 19,
+        "validation": "luhn"
+    },
+    "Dankort": {
+        "numbers":
+            [
+                5019, 4571
+            ],
+        "length": 16,
+        "validation": "luhn"
+    },
+    "Mir": {
+        "numbers":
+            [[2200, 2204]],
+        "length": 19,
+        "validation": "luhn"
+    },
+    "BORICA": {
+        "numbers":
+            [2205],
+        "length": 16,
+        "validation": "luhn"
+    },
+    "Mastercard": {
+        "numbers":
+            [
+                [2221,2720],
+                [51, 55]
+            ],
+        "length": 16,
+        "validation": "luhn"
+    },
+    "Troy": {
+        "numbers":
+            [
+                65, 9792
+            ],
+        "length": 16,
+        "validation": "luhn"
+    },
+    "Visa": {
+        "numbers":
+            [4],
+        "length": 19,
+        "validation": "luhn"
+    },
+    "Visa Electron": {
+        "numbers":
+            [
+                4026, 417500, 4508, 4844, 4913, 4917
+            ],
+        "length": 16,
+        "validation": "luhn"
+    },
+    "UATP": {
+        "numbers":
+            [1],
+        "length": 15,
+        "validation": "luhn"
+    },
+    "Verve": {
+        "numbers":
+            [
+                [506099,506198],
+                [650002,650027],
+                [507865,507964]
+            ],
+        "length": 19,
+        "validation": "luhn"
+    },
+    "LankaPay": {
+        "numbers":
+            [357111],
+        "length": 16,
+        "validation": "none"
+    },
+    "UzCard": {
+        "numbers":
+            [8600],
+        "length": 16,
+        "validation": "none"
+    },
+    "Humo": {
+        "numbers":
+            [9860],
+        "length": 16,
+        "validation": "none"
+    },
+    "GPN": {
+        "numbers":
+            [
+                1946, 50, 56, 58, [60,63]
+            ],
+        "length": 19,
+        "validation": "luhn"
+    },
+    "Napas": {
+        "numbers":
+            [9704],
+        "length": 19,
+        "validation": "none"
+    }
+}
