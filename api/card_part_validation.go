@@ -8,7 +8,7 @@ import (
 
 
 func MajorIndustryValidation(w http.ResponseWriter, r *http.Request, industryResources interface{}) {
-	cardInts := ParseIncomingCardNumber(&w, r, "/industry_validation", "GET")
+	cardInts := ParseIncomingCardNumberReturnSlice(&w, r, "/industry_validation", "GET")
 	if len(*cardInts) == 0 {
 		return
 	} else {
