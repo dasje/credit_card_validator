@@ -52,14 +52,14 @@ func handleWithResources(resource interface{}, serverFunc serverFunc) http.Handl
 }
 
 func main() {
-	industryResources, issuerResources, cardRegex := loadResources()
+	// industryResources, issuerResources, cardRegex := loadResources()
+	_, issuerResources, cardRegex := loadResources()
 	
 	fileServer := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fileServer)
-	http.HandleFunc("/validate_card", handleWithResources(issuerResources, server.CardValidation))
-	http.HandleFunc("/industry_validation", handleWithResources(industryResources, server.IdentifyMajorIndustry))
-	http.HandleFunc("/check_card_accepted", handleWithResources(cardRegex, server.CardAccepted))
-	http.HandleFunc("/check_cvv_valid", server.CVVValidation)
+	http.HandleFunc("/card_accepted", handleWithResources(cardRegex, server.CardAccepted))
+	http.HandleFunc("/validate_card", server.CardValidation)
+	http.HandleFunc("/card_info", handleWithResources(issuerResources, server.DeconstructCardInfo))
 
 	fmt.Printf("Starting server at port 8080\n")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
