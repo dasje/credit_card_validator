@@ -1,6 +1,6 @@
-GET http://localhost:8080/industry_validation HTTP/1.1
+GET http://localhost:8080/check_card_accepted HTTP/1.1
 content-type: application/json
 
 {
     "cardNumber": "3569990010095841"
-}
+} 

@@ -1,6 +1,6 @@
-GET http://localhost:8080/luhn_validation HTTP/1.1
+GET http://localhost:8080/validate_card HTTP/1.1
 content-type: application/json
 
 {
-    "cardNumber": "5354563770379863"
+    "cardNumber": "3569990010095841"
 } 
