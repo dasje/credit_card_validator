@@ -20,3 +20,7 @@ type OutgoingCardNumber struct {
 	CardNumber *bool `json:"cardNumber"`
 	CVVNumber  *bool `json:"cvvNumber"`
 }
+
+type OutgoingCardAccepted struct {
+	CardAccepted bool `json:"cardAccepted"`
+}

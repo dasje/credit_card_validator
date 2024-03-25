@@ -40,9 +40,9 @@ func CardAccepted(w http.ResponseWriter, r *http.Request, regexResource []interf
 		cardRegexSlice := regexResource[0]
 		retVal := validation_algorithms.CheckCardAccepted(*cardNumberString, cardRegexSlice)
 	
-		returnData := map[string]interface{} {
-			"cardAccepted": retVal,
-		}
+		var returnData cctypes.OutgoingCardAccepted
+		returnData.CardAccepted = retVal
+
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(returnData)
 	}
