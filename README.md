@@ -1,8 +1,13 @@
 # credit_card_validator
 ## Overview
 Deployable credit card validation server. Dockerfile and docker-compose.yaml included.
+
 This sever was built using the following public resources:
-Credit card regex patterns: https://gist.github.com/michaelkeevildown/9096cd3aac9029c4e6e05588448a8841
+
+- Credit card regex patterns: https://gist.github.com/michaelkeevildown/9096cd3aac9029c4e6e05588448a8841
+- Major industry identifiers: https://en.wikipedia.org/wiki/ISO/IEC_7812#Major_industry_identifier
+
+- Test card numbers: https://docs.adyen.com/development-resources/testing/test-card-numbers/
 ## API
 - #### /card_accepted
 This endpoint accepts a GET request with JSON body. Expected keys are "cardNumber" and "cvvNumber".
