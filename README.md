@@ -18,7 +18,7 @@ Returns the identified major industry based on the first number in the card numb
 Returns the identified card issuer.
 - #### identifyAccountIdentifier
 Returns the account identifier.
-### API
+## API
 - #### /validate_card
 This endpoint accepts a GET request with JSON body. Expected keys are "cardNumber" and "csvNumber".
 This returns a JSON with the same keys and boolean values.
