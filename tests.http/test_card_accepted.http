@@ -2,6 +2,8 @@ GET http://localhost:8080/card_accepted HTTP/1.1
 content-type: application/json
 
 {
-    "cardNumber": "3569990010095841",
+    "cardNumber": "4917484589897107",
     "cvvNumber": "123"
-}  
+} 
+
+# 3569990010095841
