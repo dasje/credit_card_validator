@@ -8,6 +8,9 @@ This sever was built using the following public resources:
 - Major industry identifiers: https://en.wikipedia.org/wiki/ISO/IEC_7812#Major_industry_identifier
 - Card issuer identifiers: https://en.wikipedia.org/wiki/Payment_card_number
 - Test card numbers: https://docs.adyen.com/development-resources/testing/test-card-numbers/
+
+Testing endpoints can be done using the files in the /tests.http folder, or using Swagger Docs.
+To use Swagger Docs, deploy the server, and navigate to localhost:8080/docs.
 ## API
 - #### /card_accepted
 This endpoint accepts a GET request with JSON body. Expected keys are "cardNumber" and "cvvNumber".
