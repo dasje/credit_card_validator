@@ -16,6 +16,6 @@ func TestResourceLoad(t *testing.T) {
 	}
 }
 
-func TestRegex(t *testing.T) {
-	a,b,c := loadResources()
-}
+// func TestRegex(t *testing.T) {
+// 	a,b,c := loadResources()
+// }

@@ -1,157 +1,120 @@
 package server
 
 import (
+	cctypes "credit_card_validation/resources"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"strconv"
 	"strings"
 )
 
-type IncomingCardNumber struct {
-	CardNumber *string `json:"cardNumber"`
-	CVVNumber *string `json:"cvvNumber"`
-}
-
-func ParseIncomingCVVNumberReturnSlice(
+// Parse the received body.
+// Unmarshall the JSON received and return the bytes.
+func ParseBody(
 	w *http.ResponseWriter,
 	r *http.Request,
 	url string,
 	method string,
-) *[]int {
+) cctypes.IncomingCardNumber {
+	var newBody cctypes.IncomingCardNumber
+
+	if r.URL.Path != url {
+		http.Error(*w, "404 Not found.", http.StatusNotFound)
+		return newBody
+	}
+
+	if r.Method != method {
+		http.Error(*w, "Method is not supported.", http.StatusNotFound)
+		return newBody
+	}
+
+	body, bodyReadError := io.ReadAll(r.Body)
+	if bodyReadError != nil {
+		http.Error(*w, "Body not parsable.", http.StatusBadRequest)
+		return newBody
+	}
+
+	jsonReadError := json.Unmarshal(body, &newBody)
+	if jsonReadError != nil {
+		http.Error(*w, "Body is not valid JSON.", http.StatusBadRequest)
+		return newBody
+	} else if newBody.CardNumber == nil {
+		// If card number not present, exit function.
+		http.Error(*w, "Card number not present. JSON not parsable.", http.StatusBadRequest)
+		return newBody
+	} else if newBody.CVVNumber == nil {
+		// If cvv not present, exit function.
+		http.Error(*w, "CVV not present. JSON not parsable.", http.StatusBadRequest)
+		return newBody
+	}
+	return newBody
+}
+
+// Convert card number and cvv bytes to int slices.
+func ParseBodyAsSlice(
+	w *http.ResponseWriter,
+	r *http.Request,
+	url string,
+	method string,
+) (*[]int, *[]int) {
+	body := ParseBody(w, r, url, method)
+	
+	var cardInts []int
 	var cvvInts []int
 
-	if r.URL.Path != url {
-		http.Error(*w, "404 Not found.", http.StatusNotFound)
-		return &cvvInts
-	}
-
-	if r.Method != method {
-		http.Error(*w, "Method is not supported.", http.StatusNotFound)
-		return &cvvInts
-	}
-
-	body, bodyReadError := io.ReadAll(r.Body)
-	if bodyReadError != nil {
-		http.Error(*w, "Body not parsable.", http.StatusBadRequest)
-		return &cvvInts
-	}
-
-	// Extract card number from incoming JSON
-	var newBody IncomingCardNumber
 	var cvvNumber string
-	jsonReadError := json.Unmarshal(body, &newBody)
-	if jsonReadError != nil {
-		http.Error(*w, "Body is not valid JSON.", http.StatusBadRequest)
-		return &cvvInts
-		} else if newBody.CVVNumber == nil {
-		// If card number not present, exit function.
-		http.Error(*w, "JSON not parsable.", http.StatusBadRequest)
-		return &cvvInts
-	}
-	cvvNumber = *newBody.CVVNumber
-	
-	// Convert card number string to slice.
-	cardStringInts := strings.SplitAfter(cvvNumber, "")
-	for _, v := range cardStringInts {
-		newV, conversionError := strconv.Atoi(v)
-		if conversionError != nil {
-			http.Error(*w, "Card number not readable.", http.StatusBadRequest)
-			return &cvvInts
-			} else {
-			cvvInts = append(cvvInts, newV)
-		}
-	}
-	return &cvvInts
-}
-
-func ParseIncomingCardNumberReturnSlice(
-	w *http.ResponseWriter,
-	r *http.Request,
-	url string,
-	method string,
-) *[]int {
-	var cardInts []int
-
-	if r.URL.Path != url {
-		http.Error(*w, "404 Not found.", http.StatusNotFound)
-		return &cardInts
-	}
-
-	if r.Method != method {
-		http.Error(*w, "Method is not supported.", http.StatusNotFound)
-		return &cardInts
-	}
-
-	body, bodyReadError := io.ReadAll(r.Body)
-	if bodyReadError != nil {
-		http.Error(*w, "Body not parsable.", http.StatusBadRequest)
-		return &cardInts
-	}
-
-	// Extract card number from incoming JSON
-	var newBody IncomingCardNumber
 	var cardNumber string
-	jsonReadError := json.Unmarshal(body, &newBody)
-	if jsonReadError != nil {
-		http.Error(*w, "Body is not valid JSON.", http.StatusBadRequest)
-		return &cardInts
-		} else if newBody.CardNumber == nil {
-		// If card number not present, exit function.
-		http.Error(*w, "JSON not parsable.", http.StatusBadRequest)
-		return &cardInts
-	}
-	cardNumber = *newBody.CardNumber
+	cvvNumber = *body.CVVNumber
+	cardNumber = *body.CardNumber
 	
 	// Convert card number string to slice.
-	cardStringInts := strings.SplitAfter(cardNumber, "")
-	for _, v := range cardStringInts {
+	cardNumberStringInts := strings.SplitAfter(cardNumber, "")
+	for _, v := range cardNumberStringInts {
 		newV, conversionError := strconv.Atoi(v)
 		if conversionError != nil {
 			http.Error(*w, "Card number not readable.", http.StatusBadRequest)
-			return &cardInts
-			} else {
+			return &cardInts, &cvvInts
+		} else {
 			cardInts = append(cardInts, newV)
 		}
 	}
-	return &cardInts
+	// Convert cvv number string to slice.
+	cvvNumberStringInts := strings.SplitAfter(cvvNumber, "")
+	for _, v := range cvvNumberStringInts {
+		newV, conversionError := strconv.Atoi(v)
+		if conversionError != nil {
+			http.Error(*w, "Card number not readable.", http.StatusBadRequest)
+			return &cardInts, &cvvInts
+		} else {
+			cvvInts = append(cvvInts, newV)
+		}
+	}
+
+	return &cardInts, &cvvInts
 }
 
-func ParseIncomingCardNumberReturnString(
+// Convert card number and cvv bytes to strings.
+func ParseBodyAsString(
 	w *http.ResponseWriter,
 	r *http.Request,
 	url string,
 	method string,
-) string {
-	var cardString string
-	
-	if r.URL.Path != url {
-		http.Error(*w, "404 Not found.", http.StatusNotFound)
-		return cardString
+) (*string, *string, error) {
+	body := ParseBody(w, r, url, method)
+
+	cvvNumber := body.CVVNumber
+	cardNumber := body.CardNumber
+
+	if len(*cvvNumber) == 0 {
+		http.Error(*w, "CVV number not readable.", http.StatusNoContent)
+		return nil, nil, errors.New("no cvv number")
+	}
+	if len(*cardNumber) == 0 {
+		http.Error(*w, "Card number not readable.", http.StatusNoContent)
+		return nil, nil, errors.New("no card number")
 	}
 
-	if r.Method != method {
-		http.Error(*w, "Method is not supported.", http.StatusNotFound)
-		return cardString
-	}
-
-	body, bodyReadError := io.ReadAll(r.Body)
-	if bodyReadError != nil {
-		http.Error(*w, "Body not parsable.", http.StatusBadRequest)
-		return cardString
-	}
-
-	// Extract card number from incoming JSON
-	var newBody IncomingCardNumber
-	jsonReadError := json.Unmarshal(body, &newBody)
-	if jsonReadError != nil {
-		http.Error(*w, "Body is not valid JSON.", http.StatusBadRequest)
-		return cardString
-		} else if newBody.CardNumber == nil {
-		// If card number not present, exit function.
-		http.Error(*w, "JSON not parsable.", http.StatusBadRequest)
-		return cardString
-	}
-	cardString = *newBody.CardNumber
-	return cardString
+	return cardNumber, cvvNumber, nil
 }
