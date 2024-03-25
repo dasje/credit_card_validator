@@ -1,4 +1,18 @@
 # credit_card_validator
+## Overview
+Deployable credit card validation server. Dockerfile and docker-compose.yaml included.
+This sever was built using the following public resources:
+Credit card regex patterns: https://gist.github.com/michaelkeevildown/9096cd3aac9029c4e6e05588448a8841
+## API
+- #### /card_accepted
+This endpoint accepts a GET request with JSON body. Expected keys are "cardNumber" and "cvvNumber".
+This returns a JSON with the key cardAccepted and boolean value.
+- #### /validate_card
+This endpoint accepts a GET request with JSON body. Expected keys are "cardNumber" and "cvvNumber".
+This returns a JSON with the same keys and boolean values.
+- #### /card_info
+This endpoint accepts a GET request with JSON body. Expected keys are "cardNumber" and "cvvNumber".
+This returns a JSON with the following keys: "majorIndustry", "cardIssuer", "accountIdentifier".
 ## Functionality
 ### Validation algorithms
 - #### Luhn
@@ -18,14 +32,6 @@ Returns the identified major industry based on the first number in the card numb
 Returns the identified card issuer.
 - #### identifyAccountIdentifier
 Returns the account identifier.
-## API
-- #### /validate_card
-This endpoint accepts a GET request with JSON body. Expected keys are "cardNumber" and "csvNumber".
-This returns a JSON with the same keys and boolean values.
-- #### /card_info
-This endpoint accepts a GET request with JSON body. Expected keys are "cardNumber" and "csvNumber".
-This returns a JSON with the following keys: "majorIndustry", "cardIssuer", "accountIdentifier".
-### 
 ## Tests
 ### HTTP tests
 These tests are defined in tests.http. I use the REST Client plugin for VSCode.
