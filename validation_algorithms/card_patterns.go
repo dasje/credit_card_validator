@@ -4,6 +4,8 @@ import (
 	"regexp"
 )
 
+// Validate CVV length.
+// TODO Identify which credit card providers use len(4) cvv numbers.
 func CVVIsValid(cvvNumber []int) bool {
 	if len(cvvNumber) == 3 {
 		return true
