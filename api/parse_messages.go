@@ -1,26 +1,24 @@
 package server
 
 import (
+	cctypes "credit_card_validation/resources"
 	"encoding/json"
-	"fmt"
+	"errors"
 	"io"
 	"net/http"
 	"strconv"
 	"strings"
 )
 
-type IncomingCardNumber struct {
-	CardNumber *string `json:"cardNumber"`
-	CVVNumber *string `json:"cvvNumber"`
-}
-
+// Parse the received body.
+// Unmarshall the JSON received and return the bytes.
 func ParseBody(
 	w *http.ResponseWriter,
 	r *http.Request,
 	url string,
 	method string,
-) IncomingCardNumber {
-	var newBody IncomingCardNumber
+) cctypes.IncomingCardNumber {
+	var newBody cctypes.IncomingCardNumber
 
 	if r.URL.Path != url {
 		http.Error(*w, "404 Not found.", http.StatusNotFound)
@@ -44,17 +42,17 @@ func ParseBody(
 		return newBody
 	} else if newBody.CardNumber == nil {
 		// If card number not present, exit function.
-		http.Error(*w, "JSON not parsable.", http.StatusBadRequest)
+		http.Error(*w, "Card number not present. JSON not parsable.", http.StatusBadRequest)
 		return newBody
 	} else if newBody.CVVNumber == nil {
 		// If cvv not present, exit function.
-		http.Error(*w, "JSON not parsable.", http.StatusBadRequest)
+		http.Error(*w, "CVV not present. JSON not parsable.", http.StatusBadRequest)
 		return newBody
 	}
-	fmt.Print(newBody)
 	return newBody
 }
 
+// Convert card number and cvv bytes to int slices.
 func ParseBodyAsSlice(
 	w *http.ResponseWriter,
 	r *http.Request,
@@ -97,16 +95,26 @@ func ParseBodyAsSlice(
 	return &cardInts, &cvvInts
 }
 
+// Convert card number and cvv bytes to strings.
 func ParseBodyAsString(
 	w *http.ResponseWriter,
 	r *http.Request,
 	url string,
 	method string,
-) (*string, *string) {
+) (*string, *string, error) {
 	body := ParseBody(w, r, url, method)
 
 	cvvNumber := body.CVVNumber
 	cardNumber := body.CardNumber
 
-	return cardNumber, cvvNumber
+	if len(*cvvNumber) == 0 {
+		http.Error(*w, "CVV number not readable.", http.StatusNoContent)
+		return nil, nil, errors.New("no cvv number")
+	}
+	if len(*cardNumber) == 0 {
+		http.Error(*w, "Card number not readable.", http.StatusNoContent)
+		return nil, nil, errors.New("no card number")
+	}
+
+	return cardNumber, cvvNumber, nil
 }
