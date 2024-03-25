@@ -1,0 +1,102 @@
+basePath: /
+definitions:
+  cctypes.IncomingCardNumber:
+    properties:
+      cardNumber:
+        type: string
+      cvvNumber:
+        type: string
+    type: object
+  cctypes.OutgoingCardAccepted:
+    properties:
+      cardAccepted:
+        type: boolean
+    type: object
+  cctypes.OutgoingCardNumber:
+    properties:
+      cardNumber:
+        type: boolean
+      cvvNumber:
+        type: boolean
+    type: object
+  cctypes.OutgoingIssuerData:
+    properties:
+      cardIssuer:
+        type: string
+      majorIndustry:
+        type: string
+    type: object
+info:
+  contact: {}
+  title: Credit Card Validator API documentation
+  version: 1.0.0// @host localhost:8000
+paths:
+  /card_accepted:
+    post:
+      consumes:
+      - application/json
+      description: Identifiers whether card is accepted based on whether regex pattern
+        can be identified in credit_card_regex resource.
+      parameters:
+      - description: Card numbers
+        in: body
+        name: cardNumbers
+        required: true
+        schema:
+          $ref: '#/definitions/cctypes.IncomingCardNumber'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/cctypes.OutgoingCardAccepted'
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+      summary: Checks if card accepted
+  /card_info:
+    post:
+      consumes:
+      - application/json
+      description: Identify the major industry and card issuer from the provided card
+        number.
+      parameters:
+      - description: Card numbers
+        in: body
+        name: cardNumbers
+        required: true
+        schema:
+          $ref: '#/definitions/cctypes.IncomingCardNumber'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/cctypes.OutgoingIssuerData'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            type: object
+      summary: Identify major industry
+  /validate_card:
+    post:
+      consumes:
+      - application/json
+      description: Validate card number using luhn algorithm, and cvv length.
+      parameters:
+      - description: Card numbers
+        in: body
+        name: cardNumbers
+        required: true
+        schema:
+          $ref: '#/definitions/cctypes.IncomingCardNumber'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/cctypes.OutgoingCardNumber'
+        "204":
+          description: No Content
+          schema:
+            type: object
+      summary: Validate card number
+swagger: "2.0"

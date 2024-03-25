@@ -1,13 +1,20 @@
 package main
 
+// @title Credit Card Validator API documentation
+// @version 1.0.0// @host localhost:8000
+// @BasePath /
+
 import (
 	server "credit_card_validation/api"
+	docs "credit_card_validation/docs"
 	cctypes "credit_card_validation/resources"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 // Load static JSON resources into memory.
@@ -62,10 +69,19 @@ func handleWithResources(serverFunc serverFunc, resource ...interface{}) http.Ha
 }
 
 func main() {
+	// programmatically set swagger info
+	docs.SwaggerInfo.Title = "Credit Card Validator API"
+	docs.SwaggerInfo.Description = "Server for validation credit card numbers."
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Host = "localhost:8080"
+	docs.SwaggerInfo.BasePath = "/"
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+
 	industryResources, issuerResources, cardRegex := loadResources()
 	
 	fileServer := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fileServer)
+	http.HandleFunc("/docs/", httpSwagger.WrapHandler.ServeHTTP)
 	http.HandleFunc("/card_accepted", handleWithResources(server.CardAccepted, cardRegex))
 	http.HandleFunc("/validate_card", server.CardValidation)
 	http.HandleFunc("/card_info", handleWithResources(server.DeconstructCardInfo, issuerResources, industryResources))
